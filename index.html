@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT Growth - Painel</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+
+        header {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            background: #111;
+            font-size: 18px;
+            color: #f97316;
+        }
+
+        .container {
+            padding: 10px;
+        }
+
+        .card {
+            background: #151515;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #262626;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info {
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #e5e5e5;
+        }
+
+        button {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .copy {
+            background: #f97316;
+            color: #fff;
+            margin-left: 5px;
+        }
+
+        .download {
+            background: #ea580c;
+            color: #fff;
+        }
+
+        .eventos {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .eventos span {
+            display: block;
+            background: #1f1f1f;
+            padding: 6px;
+            border-radius: 6px;
+            margin-top: 5px;
+            border-left: 3px solid #f97316;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>MT GROWTH - PAINEL</header>
+
+    <div class="container" id="app"></div>
+
+    <script>
+
+        const empresas = [
+            {
+                nome: "Castelão",
+                endereco: "Av. das Sibipirunas 2047",
+                contato: "66 9 9232-1101",
+                logo: "img/castelo.png",
+                eventos: ["Segunda do Hortifruti", "Terça da Carne", "Final de Semana de Ofertas"]
+            },
+            {
+                nome: "Supermercado Castelão",
+                endereco: "R. Jangada 365, M. Vindilina III",
+                contato: "66 9 9263-2086",
+                logo: "img/supermercaste.png",
+                eventos: ["Segunda do Hortifruti", "Final de Semana de Ofertas"]
+            },
+            {
+                nome: "Mercado Guri",
+                endereco: "Av. dos Ingás 441",
+                contato: "66 9 9610-0971",
+                logo: "img/guri.png",
+                eventos: ["Ofertas da Semana"]
+            },
+            {
+                nome: "Castelão Frut",
+                endereco: "Av das Itaubas 1793",
+                contato: "66 9 9271-1305",
+                logo: "img/frut.png",
+                eventos: ["Segunda do Horti"]
+            },
+            {
+                nome: "Castelão Locações",
+                endereco: "Av André Maggi 208 ",
+                contato: "66 9 9243-0422",
+                logo: "img/locacoes.png",
+                eventos: ["Promo Equipamentos", "Diária Especial", "Pacote Obra"]
+            }
+        ];
+
+        const app = document.getElementById("app");
+
+        function copiar(texto) {
+            navigator.clipboard.writeText(texto);
+            alert("Copiado!");
+        }
+
+        empresas.forEach((empresa) => {
+
+            let card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+        <div class="logo-box">
+            <div class="logo">
+                <img src="${empresa.logo}">
+            </div>
+            <button class="download" onclick="baixarLogo('${empresa.logo}')">Baixar Logo</button>
+        </div>
+
+        <div class="info"><b>${empresa.nome}</b></div>
+
+        <div class="info">
+            ${empresa.endereco}
+            <button class="copy" onclick="copiar('${empresa.endereco}')">Copiar</button>
+        </div>
+
+        <div class="info">
+            ${empresa.contato}
+            <button class="copy" onclick="copiar('${empresa.contato}')">Copiar</button>
+        </div>
+
+        <div class="eventos">
+            <b>Eventos:</b>
+            ${empresa.eventos.map(ev => `<span>${ev}</span>`).join("")}
+        </div>
+    `;
+
+            app.appendChild(card);
+        });
+
+        function baixarLogo(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "logo.png";
+            link.click();
+        }
+
+    </script>
+
+</body>
+
+</html>
