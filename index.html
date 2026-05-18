@@ -7,196 +7,635 @@
     <title>MT Growth - Painel</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #0a0a0a;
-            color: #ffffff;
+            color: #fff;
         }
 
         header {
-            padding: 15px;
+            padding: 22px;
             text-align: center;
-            font-weight: bold;
             background: #111;
-            font-size: 18px;
+            color: #f97316;
+            font-size: 28px;
+            font-weight: bold;
+            border-bottom: 1px solid #222;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .top-bar {
+            padding: 18px;
+            background: rgba(10, 10, 10, 0.96);
+            border-bottom: 1px solid #1d1d1d;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 58px;
+            border-radius: 16px;
+            border: 1px solid #2a2a2a;
+            background: #151515;
+            color: #fff;
+            padding: 0 20px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 18px rgba(249, 115, 22, 0.18);
+        }
+
+        .suggestions {
+            position: absolute;
+            width: 100%;
+            background: #151515;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .suggestion-item {
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 1px solid #222;
+        }
+
+        .suggestion-item:hover {
+            background: #1f1f1f;
             color: #f97316;
         }
 
         .container {
-            padding: 10px;
+            padding: 18px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+            gap: 16px;
+            align-items: start;
         }
 
         .card {
-            background: #151515;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
+            width: 100%;
+            min-height: auto;
+            background: linear-gradient(145deg, #151515, #101010);
+            border-radius: 20px;
+            padding: 16px;
             border: 1px solid #262626;
+            transition: 0.3s;
+            overflow: hidden;
         }
 
-        .logo-box {
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #f97316;
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.14);
+        }
+
+        .topo-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            gap: 14px;
+        }
+
+        .empresa-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
         }
 
         .logo {
-            width: 60px;
-            height: 60px;
-            background: #222;
-            border-radius: 10px;
+            width: 68px;
+            height: 68px;
+            background: #1f1f1f;
+            border-radius: 16px;
             overflow: hidden;
+            border: 1px solid #333;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .logo img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            padding: 5px;
         }
 
-        .info {
-            font-size: 13px;
-            margin-bottom: 5px;
-            color: #e5e5e5;
+        .empresa-nome {
+            font-size: 19px;
+            font-weight: bold;
+            line-height: 1.4;
+            word-break: break-word;
         }
 
         button {
             border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 12px;
             cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        .visualizar {
+            background: linear-gradient(45deg, #f97316, #ea580c);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            min-width: 110px;
+        }
+
+        .detalhes {
+            display: none;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #2a2a2a;
+            animation: aparecer 0.3s ease;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-box {
+            background: #1a1a1a;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #2b2b2b;
+        }
+
+        .info-title {
+            font-size: 11px;
+            color: #f97316;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            line-height: 1.6;
+            word-break: break-word;
         }
 
         .copy {
             background: #f97316;
-            color: #fff;
-            margin-left: 5px;
+            color: white;
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            border-radius: 10px;
+            font-size: 12px;
         }
 
         .download {
             background: #ea580c;
-            color: #fff;
+            color: white;
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            border-radius: 10px;
+            font-size: 12px;
         }
 
-        .eventos {
-            margin-top: 10px;
+        .evento {
+            display: block;
+            background: #222;
+            padding: 11px;
+            border-radius: 10px;
+            margin-top: 8px;
+            border-left: 4px solid #f97316;
             font-size: 13px;
         }
 
-        .eventos span {
-            display: block;
-            background: #1f1f1f;
-            padding: 6px;
-            border-radius: 6px;
-            margin-top: 5px;
-            border-left: 3px solid #f97316;
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+            font-size: 15px;
+        }
+
+        .footer span {
+            color: #f97316;
+            font-weight: bold;
+        }
+
+        @media(max-width: 1400px) {
+
+            .container {
+                grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            }
+
+        }
+
+        @media(max-width: 900px) {
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .empresa-nome {
+                font-size: 16px;
+            }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .visualizar {
+                min-width: 95px;
+                padding: 9px 14px;
+                font-size: 12px;
+            }
+
+            header {
+                font-size: 23px;
+            }
+        }
+
+        @media(max-width: 600px) {
+
+            .topo-card {
+                gap: 10px;
+            }
+
+            .search-box input {
+                height: 52px;
+                font-size: 14px;
+            }
+
+            .empresa-nome {
+                font-size: 15px;
+            }
+
+            .logo {
+                width: 55px;
+                height: 55px;
+            }
+
+            .visualizar {
+                min-width: 88px;
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+
         }
     </style>
 </head>
 
 <body>
 
-    <header>MT GROWTH - PAINEL</header>
+    <header>
+        MT GROWTH - PAINEL
+    </header>
+
+    <div class="top-bar">
+
+        <div class="search-box">
+
+            <input type="text" id="pesquisa" placeholder="Pesquisar empresa, endereço ou evento..." autocomplete="off">
+
+            <div class="suggestions" id="suggestions"></div>
+
+        </div>
+
+    </div>
 
     <div class="container" id="app"></div>
+
+    <div class="footer">
+        🤝 Novas empresas serão adicionadas aqui conforme novas parcerias forem fechadas.
+        <br><br>
+        <span>MT Growth</span> • Conectando marcas, gerando resultados.
+    </div>
 
     <script>
 
         const empresas = [
+
             {
                 nome: "Castelão",
                 endereco: "Av. das Sibipirunas 2047",
                 contato: "66 9 9232-1101",
                 logo: "img/castelo.png",
-                eventos: ["Segunda do Hortifruti", "Terça da Carne", "Final de Semana de Ofertas"]
+                eventos: [
+                    "Segunda do Hortifruti",
+                    "Terça da Carne",
+                    "Final de Semana de Ofertas",
+                    "Quarta, Quinta e Sexta do Suíno",
+                    "Sexta e Sábado da Pizza"
+                ]
             },
+
             {
                 nome: "Supermercado Castelão",
                 endereco: "R. Jangada 365, M. Vindilina III",
                 contato: "66 9 9263-2086",
                 logo: "img/supermercaste.png",
-                eventos: ["Segunda do Hortifruti", "Final de Semana de Ofertas"]
+                eventos: [
+                    "Segunda do Hortifruti",
+                    "Final de Semana de Ofertas"
+                ]
             },
+
             {
                 nome: "Mercado Guri",
                 endereco: "Av. dos Ingás 441",
                 contato: "66 9 9610-0971",
                 logo: "img/guri.png",
-                eventos: ["Ofertas da Semana"]
+                eventos: [
+                    "Ofertas da Semana"
+                ]
             },
+
             {
                 nome: "Castelão Frut",
                 endereco: "Av das Itaubas 1793",
                 contato: "66 9 9271-1305",
                 logo: "img/frut.png",
-                eventos: ["Segunda do Horti"]
+                eventos: [
+                    "Segunda do Horti"
+                ]
             },
+
             {
                 nome: "Castelão Locações",
-                endereco: "Av André Maggi 208 ",
+                endereco: "Av André Maggi 208",
                 contato: "66 9 9243-0422",
                 logo: "img/locacoes.png",
-                eventos: ["Promo Equipamentos", "Diária Especial", "Pacote Obra"]
+                eventos: [
+                    "Promo Equipamentos",
+                    "Diária Especial"
+                ]
             },
+
             {
                 nome: "Varanda Espetaria",
-                endereco: "Av das Sibipirunas 2047 ",
+                endereco: "Av das Sibipirunas 2047",
                 contato: "66 9 9258-6450",
                 logo: "img/varanda.png",
-                eventos: ["Quarta do Drink", "Quinta Happy", "Sexta Happy"]
-            },
+                eventos: [
+                    "Quarta do Drink",
+                    "Quinta Happy",
+                    "Sexta Happy"
+                ]
+            }
+
         ];
+
+        empresas.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
         const app = document.getElementById("app");
 
         function copiar(texto) {
+
             navigator.clipboard.writeText(texto);
-            alert("Copiado!");
+
+            alert("Copiado com sucesso!");
+
         }
 
-        empresas.forEach((empresa) => {
+        function toggleDetalhes(id) {
 
-            let card = document.createElement("div");
-            card.className = "card";
+            const detalhes = document.getElementById(id);
 
-            card.innerHTML = `
-        <div class="logo-box">
-            <div class="logo">
-                <img src="${empresa.logo}">
-            </div>
-            <button class="download" onclick="baixarLogo('${empresa.logo}')">Baixar Logo</button>
-        </div>
+            if (detalhes.style.display === "block") {
 
-        <div class="info"><b>${empresa.nome}</b></div>
+                detalhes.style.display = "none";
 
-        <div class="info">
-            ${empresa.endereco}
-            <button class="copy" onclick="copiar('${empresa.endereco}')">Copiar</button>
-        </div>
+            } else {
 
-        <div class="info">
-            ${empresa.contato}
-            <button class="copy" onclick="copiar('${empresa.contato}')">Copiar</button>
-        </div>
+                document.querySelectorAll(".detalhes").forEach(item => {
+                    item.style.display = "none";
+                });
 
-        <div class="eventos">
-            <b>Eventos:</b>
-            ${empresa.eventos.map(ev => `<span>${ev}</span>`).join("")}
-        </div>
-    `;
+                detalhes.style.display = "block";
 
-            app.appendChild(card);
-        });
+            }
+        }
 
         function baixarLogo(url) {
+
             const link = document.createElement('a');
+
             link.href = url;
+
             link.download = "logo.png";
+
             link.click();
+
         }
+
+        function renderizar(empresasFiltradas) {
+
+            app.innerHTML = "";
+
+            empresasFiltradas.forEach((empresa, index) => {
+
+                let card = document.createElement("div");
+
+                card.className = "card";
+
+                card.innerHTML = `
+
+                    <div class="topo-card">
+
+                        <div class="empresa-info">
+
+                            <div class="logo">
+                                <img src="${empresa.logo}">
+                            </div>
+
+                            <div class="empresa-nome">
+                                ${empresa.nome}
+                            </div>
+
+                        </div>
+
+                        <button 
+                            class="visualizar"
+                            onclick="toggleDetalhes('detalhes-${index}')"
+                        >
+                            Visualizar
+                        </button>
+
+                    </div>
+
+                    <div class="detalhes" id="detalhes-${index}">
+
+                        <div class="info-box">
+
+                            <div class="info-title">
+                                Endereço
+                            </div>
+
+                            <div class="info-text">
+                                ${empresa.endereco}
+                            </div>
+
+                            <button 
+                                class="copy"
+                                onclick="copiar('${empresa.endereco}')"
+                            >
+                                Copiar Endereço
+                            </button>
+
+                        </div>
+
+                        <div class="info-box">
+
+                            <div class="info-title">
+                                Contato
+                            </div>
+
+                            <div class="info-text">
+                                ${empresa.contato}
+                            </div>
+
+                            <button 
+                                class="copy"
+                                onclick="copiar('${empresa.contato}')"
+                            >
+                                Copiar Contato
+                            </button>
+
+                        </div>
+
+                        <div class="info-box">
+
+                            <div class="info-title">
+                                Eventos
+                            </div>
+
+                            ${empresa.eventos.map(evento => `
+                            
+                                <span class="evento">
+                                    ${evento}
+                                </span>
+
+                            `).join("")}
+
+                        </div>
+
+                        <button 
+                            class="download"
+                            onclick="baixarLogo('${empresa.logo}')"
+                        >
+                            Baixar Logo
+                        </button>
+
+                    </div>
+
+                `;
+
+                app.appendChild(card);
+
+            });
+
+        }
+
+        renderizar(empresas);
+
+        const pesquisa = document.getElementById("pesquisa");
+        const suggestions = document.getElementById("suggestions");
+
+        pesquisa.addEventListener("input", () => {
+
+            const valor = pesquisa.value.toLowerCase();
+
+            const filtradas = empresas.filter(empresa =>
+
+                empresa.nome.toLowerCase().includes(valor) ||
+                empresa.endereco.toLowerCase().includes(valor) ||
+                empresa.eventos.join(" ").toLowerCase().includes(valor)
+
+            );
+
+            renderizar(filtradas);
+
+            if (valor.length === 0) {
+
+                suggestions.style.display = "none";
+
+                return;
+
+            }
+
+            suggestions.innerHTML = "";
+
+            filtradas.forEach(empresa => {
+
+                const item = document.createElement("div");
+
+                item.className = "suggestion-item";
+
+                item.innerText = empresa.nome;
+
+                item.onclick = () => {
+
+                    pesquisa.value = empresa.nome;
+
+                    renderizar([empresa]);
+
+                    suggestions.style.display = "none";
+
+                };
+
+                suggestions.appendChild(item);
+
+            });
+
+            suggestions.style.display = filtradas.length ? "block" : "none";
+
+        });
+
+        document.addEventListener("click", (e) => {
+
+            if (!e.target.closest(".search-box")) {
+
+                suggestions.style.display = "none";
+
+            }
+
+        });
 
     </script>
 
