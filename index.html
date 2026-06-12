@@ -318,6 +318,28 @@
             }
 
         }
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #f97316;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: .3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -375,7 +397,7 @@
                     "Gravação Locações",
                     "Gravação Sibipirunas",
                     "Gravação Vindilina",
-                    
+
                 ]
             },
 
@@ -439,11 +461,35 @@
 
         const app = document.getElementById("app");
 
-        function copiar(texto) {
+        async function copiar(texto) {
 
-            navigator.clipboard.writeText(texto);
+            try {
 
-            alert("Copiado com sucesso!");
+                await navigator.clipboard.writeText(texto);
+
+                mostrarToast("Copiado com sucesso!");
+
+            } catch (erro) {
+
+                mostrarToast("Erro ao copiar");
+
+            }
+
+        }
+
+        function mostrarToast(mensagem) {
+
+            const toast = document.getElementById("toast");
+
+            toast.textContent = mensagem;
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 2500);
 
         }
 
@@ -653,6 +699,7 @@
 
     </script>
 
+    <div id="toast" class="toast"></div>
 </body>
 
 </html>
