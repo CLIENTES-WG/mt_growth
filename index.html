@@ -340,6 +340,25 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        .agenda-status {
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-size: 13px;
+            background: #222;
+            border-left: 4px solid #25D366;
+        }
+
+        .whatsapp {
+            background: #25D366;
+            color: white;
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -445,6 +464,7 @@
 
             {
                 nome: "Varanda Espetaria",
+                agenda: { definida: true, dia: "Terça-feira", hora: "16:30" },
                 endereco: "Av das Sibipirunas 2047",
                 contato: "(66) 9 9258-6450",
                 logo: "img/varanda.png",
@@ -510,6 +530,27 @@
                 detalhes.style.display = "block";
 
             }
+        }
+
+
+        function mensagemAgenda(empresa) {
+
+            if (empresa.agenda && empresa.agenda.definida) {
+
+                window.open(
+                    `https://wa.me/55${empresa.contato.replace(/\D/g, '')}?text=${encodeURIComponent('Olá! Passando para confirmar nossa gravação de ' + empresa.diaAgenda + ' às ' + empresa.horaAgenda + '. Está tudo certo?')}`,
+                    '_blank'
+                );
+
+            } else {
+
+                window.open(
+                    `https://wa.me/55${empresa.contato.replace(/\D/g, '')}?text=${encodeURIComponent('Olá! Gostaria de alinhar o melhor dia e horário para nossas gravações.')}`,
+                    '_blank'
+                );
+
+            }
+
         }
 
         function baixarLogo(url) {
@@ -612,6 +653,35 @@
                                 </span>
 
                             `).join("")}
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-title">
+                                Agenda de Gravação
+                            </div>
+
+                            ${empresa.nome === 'Varanda Espetaria' ? `
+                                <div class="agenda-status">
+                                    Gravação semanal: Terça-feira • 16:30
+                                </div>
+
+                                <button class="whatsapp"
+                                onclick="window.open('https://wa.me/556692586450?text=Olá! Passando para confirmar nossa gravação de terça-feira às 16:30. Está tudo certo?','_blank')">
+                                    Confirmar Gravação
+                                </button>
+                            ` : `
+                                <div class="agenda-status">
+                                    Agenda ainda não definida
+                                </div>
+
+                                <button class="whatsapp"
+                                onclick="window.open('https://wa.me/55${empresa.contato.replace(/\D/g, '')}?text=Olá! Gostaria de alinhar o melhor dia e horário para nossas gravações.','_blank')">
+                                    Combinar Horário
+                                </button>
+                            `}
 
                         </div>
 
