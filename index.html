@@ -342,12 +342,17 @@
         }
 
         .agenda-status {
-            padding: 10px;
+            padding: 11px;
             border-radius: 10px;
             margin-top: 8px;
             font-size: 13px;
             background: #222;
             border-left: 4px solid #25D366;
+            line-height: 1.5;
+        }
+
+        .agenda-status.pendente {
+            border-left-color: #f97316;
         }
 
         .whatsapp {
@@ -443,6 +448,7 @@
 
             {
                 nome: "Castelão Frut",
+                agenda: { definida: true, dia: "Segunda-feira", hora: "15:00" },
                 endereco: "Av das Itaubas 1793",
                 contato: "(66) 9 9271-1305",
                 logo: "img/frut.png",
@@ -491,7 +497,7 @@
 
             } catch (erro) {
 
-                mostrarToast("Erro ao copiar");
+                mostrarToast("Erro ao copiar.");
 
             }
 
@@ -533,25 +539,72 @@
         }
 
 
-        function mensagemAgenda(empresa) {
+        function telefoneLimpo(contato) {
+            return contato.replace(/\D/g, "");
+        }
+
+        function linkWhatsapp(contato, mensagem) {
+            return "https://wa.me/55" + telefoneLimpo(contato) + "?text=" + encodeURIComponent(mensagem);
+        }
+
+        function montarAgenda(empresa) {
 
             if (empresa.agenda && empresa.agenda.definida) {
 
-                window.open(
-                    `https://wa.me/55${empresa.contato.replace(/\D/g, '')}?text=${encodeURIComponent('Olá! Passando para confirmar nossa gravação de ' + empresa.diaAgenda + ' às ' + empresa.horaAgenda + '. Está tudo certo?')}`,
-                    '_blank'
-                );
+                const mensagem = "Olá! Passando para confirmar nossa gravação de " + empresa.agenda.dia + " às " + empresa.agenda.hora + ". Está tudo certo?";
 
-            } else {
+                return `
 
-                window.open(
-                    `https://wa.me/55${empresa.contato.replace(/\D/g, '')}?text=${encodeURIComponent('Olá! Gostaria de alinhar o melhor dia e horário para nossas gravações.')}`,
-                    '_blank'
-                );
+                        <div class="info-box">
+
+                            <div class="info-title">
+                                Agenda de Gravação
+                            </div>
+
+                            <div class="agenda-status">
+                                Gravação semanal: ${empresa.agenda.dia} • ${empresa.agenda.hora}
+                            </div>
+
+                            <button 
+                                class="whatsapp"
+                                onclick="window.open('${linkWhatsapp(empresa.contato, mensagem)}','_blank')"
+                            >
+                                Confirmar Gravação
+                            </button>
+
+                        </div>
+
+                `;
 
             }
 
+            const mensagem = "Olá! Gostaria de alinhar o melhor dia e horário para nossas gravações.";
+
+            return `
+
+                        <div class="info-box">
+
+                            <div class="info-title">
+                                Agenda de Gravação
+                            </div>
+
+                            <div class="agenda-status pendente">
+                                Agenda ainda não definida
+                            </div>
+
+                            <button 
+                                class="whatsapp"
+                                onclick="window.open('${linkWhatsapp(empresa.contato, mensagem)}','_blank')"
+                            >
+                                Combinar Horário
+                            </button>
+
+                        </div>
+
+            `;
+
         }
+
 
         function baixarLogo(url) {
 
@@ -656,34 +709,7 @@
 
                         </div>
 
-
-                        <div class="info-box">
-
-                            <div class="info-title">
-                                Agenda de Gravação
-                            </div>
-
-                            ${empresa.nome === 'Varanda Espetaria' ? `
-                                <div class="agenda-status">
-                                    Gravação semanal: Terça-feira • 16:30
-                                </div>
-
-                                <button class="whatsapp"
-                                onclick="window.open('https://wa.me/556692586450?text=Olá! Passando para confirmar nossa gravação de terça-feira às 16:30. Está tudo certo?','_blank')">
-                                    Confirmar Gravação
-                                </button>
-                            ` : `
-                                <div class="agenda-status">
-                                    Agenda ainda não definida
-                                </div>
-
-                                <button class="whatsapp"
-                                onclick="window.open('https://wa.me/55${empresa.contato.replace(/\D/g, '')}?text=Olá! Gostaria de alinhar o melhor dia e horário para nossas gravações.','_blank')">
-                                    Combinar Horário
-                                </button>
-                            `}
-
-                        </div>
+                        ${montarAgenda(empresa)}
 
                         <button 
                             class="download"
